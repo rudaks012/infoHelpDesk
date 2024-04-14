@@ -1,0 +1,20 @@
+# 전체통합헬프데스크
+
+<!DOCTYPE html>
+<!-- index.html -->
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+  <title>메인</title>
+  <th:block th:include="fragments/script"></th:block>
+</head>
+<body>
+<h1>알람 보내기</h1>
+<span>토큰</span><input type="text" id="token"><br>
+<span>제목</span><input type="text" id="title"><br>
+<span>내용</span><input type="text" id="body">
+<button onclick="sendNotification()">전송</button>
+<th:block layout:fragment="custom-js">
+  <script src="/common/firebase/js/firebaseMessaging.js"></script>
+</th:block>
+</body>
+</html>

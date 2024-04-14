@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<!--라이브러리 참조 : Thymeleaf & Thymeleaf Layout -->
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<!--공통 JS / CSS 영역을 관리하는 환경 영역-->
+<head th:replace="fragments/config :: ConfigFragment">
+</head>
+
+<body id="page-top">
+<!-- Page Wrapper -->
+<div id="wrapper">
+  <!-- Content Wrapper -->
+  <th:block th:replace="fragments/left-panel :: LeftPanelFragment"></th:block>
+
+  <div id="content-wrapper" class="d-flex flex-column">
+    <!--Header 영역을 참조합니다.-->
+    <div id="content">
+      <header th:replace="fragments/header :: HeaderFragment"></header>
+
+      <th:block layout:fragment="Content"></th:block>
+
+    </div>
+  </div>
+</div>
+
+</body>
+<footer th:replace="fragments/footer :: FooterFragment"></footer>
+<!--Footer 영역을 참조합니다.-->
+</html>
