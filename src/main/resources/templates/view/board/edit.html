@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/defaultLayout}"
+      layout:fragment="Content">
+<div class="container">
+  <h1>글 작성하기</h1>
+<!--  <form th:action="@{/board/save}" method="post">-->
+  <form id="postForm">
+    <div>
+      <label for="idx">Index</label>
+      <input type="number" id="idx" name="bbs_idx" required>
+    </div>
+    <div>
+      <label for="parentNum">Parent Number</label>
+      <input type="number" id="parentNum" name="bbs_parent_num" required>
+    </div>
+    <div>
+      <label for="thread">Thread</label>
+      <input type="number" id="thread" name="bbs_thread" required>
+    </div>
+    <div>
+      <label for="depth">Depth</label>
+      <input type="number" id="depth" name="bbs_depth" required>
+    </div>
+    <div>
+      <label for="askType">Ask Type</label>
+      <input type="number" id="askType" name="bbs_ask_type" required>
+    </div>
+    <div>
+      <label for="status">Status</label>
+      <input type="number" id="status" name="bbs_status" required>
+    </div>
+    <div>
+      <label for="title">제목</label>
+      <input type="text" id="title" name="bbs_subject" required>
+    </div>
+    <div>
+      <label for="writer">작성자</label>
+      <input type="text" id="writer" name="bbs_writer" required>
+    </div>
+    <div>
+      <label for="regdate">등록 일자</label>
+      <input type="datetime-local" id="regdate" name="bbs_regdate" required>
+    </div>
+    <div>
+      <label for="bbs_cate">bbs_cate</label>
+      <input type="number" id="bbs_cate" name="bbs_cate" required>
+    </div>
+
+    <div>
+      <label for="content">내용</label>
+      <textarea id="content" name="bbs_contents" required></textarea>
+    </div>
+    <div>
+      <button type="submit">Submit</button>
+    </div>
+  </form>
+</div>
+
+<script>
+
+  document.getElementById('postForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // 기본 폼 제출 방지
+
+    var formData = new FormData(this);
+    var jsonData = {};
+    formData.forEach(function(value, key) {
+      jsonData[key] = value;
+    });
+
+    fetch('/board/save.do', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+        // 'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').getAttribute('content') // CSRF 토큰 추가
+      },
+      body: JSON.stringify(jsonData)
+    })
+    .then(function(response) {
+      return response.json(); // JSON 응답을 파싱하고, 서버가 JSON 객체로 응답하도록 가정
+    })
+    .then(function(data) {
+      alert(data.message); // 서버로부터 받은 응답 메시지(alert)
+      window.location.href = data.redirectUrl; // 사용자가 알림을 닫은 후 인덱스 페이지로 리디렉션
+    })
+    .catch(function(error) {
+      console.error('Error:', error);
+    });
+  });
+
+</script>
+</html>

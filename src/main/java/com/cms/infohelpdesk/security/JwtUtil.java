@@ -1,4 +1,4 @@
-package com.cms.infohelpdesk.common.security;//package com.cms.commons.security;
+package com.cms.infohelpdesk.security;//package com.cms.commons.security;
 //
 //import io.jsonwebtoken.Claims;
 //import io.jsonwebtoken.Jwts;

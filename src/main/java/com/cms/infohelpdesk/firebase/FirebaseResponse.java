@@ -1,4 +1,4 @@
-package com.cms.infohelpdesk.common.firebase;
+package com.cms.infohelpdesk.firebase;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,4 +1,4 @@
-package com.cms.infohelpdesk.common.firebase;
+package com.cms.infohelpdesk.firebase;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;

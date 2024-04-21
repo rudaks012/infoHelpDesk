@@ -1,4 +1,4 @@
-package com.cms.infohelpdesk.common.firebase;
+package com.cms.infohelpdesk.firebase;
 
 
 import javax.validation.Valid;
