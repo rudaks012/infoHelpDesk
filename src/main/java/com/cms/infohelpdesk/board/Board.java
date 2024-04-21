@@ -53,7 +53,7 @@ public class Board extends BaseEntity {
     private String bbs_ip = "";
 
     @Column(name = "bbs_subject", nullable = false, length = 100)
-    private String bbs_subject;
+    private String bbsSubject;
 
     @Column(name = "bbs_delete_yn", nullable = false, length = 5)
     private String bbs_delete_yn = "N";
