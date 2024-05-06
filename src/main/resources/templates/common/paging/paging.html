@@ -1,0 +1,46 @@
+<style>
+  .pagination a {
+    padding: 8px 16px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    text-decoration: none;
+  }
+
+  .pagination a.current {
+    background-color: #4CAF50;
+    color: white;
+    border: 1px solid #4CAF50;
+  }
+
+  .pagination a:hover:not(.current) {
+    background-color: #ddd;
+  }
+
+</style>
+
+<div class="pagination" th:fragment="pagination(formId)">
+  <input type="hidden" id="pageValue" name="page">
+  <button class="page-link"
+          th:if="${pageDetails.hasPrevious}"
+          th:data-page="${pageDetails.currentPage - 1}"
+          th:data-form-id="${formId}"
+          th:onclick="pagingSubmitForm(event, this.getAttribute('data-page'), this.getAttribute('data-form-id'))"
+          th:text="'이전'">이전</button>
+
+  <span th:each="i : ${#numbers.sequence(pageDetails.startPage, pageDetails.endPage)}" class="page-item" th:classappend="${i == pageDetails.currentPage} ? 'active' : ''">
+    <button class="page-link"
+            th:data-page="${i}"
+            th:data-form-id="${formId}"
+            th:onclick="pagingSubmitForm(event, this.getAttribute('data-page'), this.getAttribute('data-form-id'))"
+            th:text="${i + 1}">1</button>
+</span>
+
+  <button class="page-link"
+          th:if="${pageDetails.hasNext}"
+          th:data-page="${pageDetails.currentPage + 1}"
+          th:data-form-id="${formId}"
+          th:onclick="pagingSubmitForm(event, this.getAttribute('data-page'), this.getAttribute('data-form-id'))"
+          th:text="'다음'">다음</button>
+
+</div>
+
