@@ -1,32 +1,60 @@
 package com.cms.infohelpdesk.common.paging;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
+import static org.springframework.data.domain.Sort.Direction;
+import static org.springframework.data.domain.Sort.by;
 
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public class PagingUtils {
 
     public static PageDetails getPageDetails(HttpServletRequest request, JpaRepository repository, Class entityType) {
-        Pageable pageable = extractPageable(request);
-        Page<?> page = repository.findAll(pageable);
-        return calculatePageDetails(page);
+        PageableAndSort pageableAndSort = extractPageable(request);
+        Page<?> page = repository.findAll(pageableAndSort.getPageable());
+        return calculatePageDetails(page, pageableAndSort.getSortField(), pageableAndSort.getSortDirection());
     }
 
-    private static Pageable extractPageable(HttpServletRequest request) {
-        int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "0");
-        System.out.println("page = " + page);
-        int size = Integer.parseInt(request.getParameter("size") != null ? request.getParameter("size") : "10");
-        System.out.println("size = " + size);
-        String sort = request.getParameter("sort") != null ? request.getParameter("sort") : "bbsSubject";
+    private static PageableAndSort extractPageable(HttpServletRequest request) {
+        // 페이지와 사이즈 파라미터 처리
+        String pageParam = request.getParameter("page");
+        int page = 0; // 기본값 0
+        if (pageParam != null && !pageParam.isEmpty()) {
+            try {
+                page = Integer.parseInt(pageParam);
+            } catch (NumberFormatException e) {
+                System.out.println("잘못된 페이지 번호, 기본값 사용: 0");
+            }
+        }
 
-        return PageRequest.of(page, size, Sort.by(sort));
+        String sizeParam = request.getParameter("size");
+        int size = 10; // 기본값 10
+        if (sizeParam != null && !sizeParam.isEmpty()) {
+            try {
+                size = Integer.parseInt(sizeParam);
+            } catch (NumberFormatException e) {
+                System.out.println("잘못된 크기 번호, 기본값 사용: 10");
+            }
+        }
+
+        // 정렬 파라미터 처리
+        Sort sort = by(Direction.ASC, "bbsSubject"); // 기본 정렬
+        String sortParam = request.getParameter("sort");
+        Direction direction = Direction.ASC; // 기본값 설정
+        if (sortParam != null && !sortParam.trim().isEmpty()) {
+            String sortOrder = request.getParameter("order");
+            direction = (sortOrder != null && sortOrder.equalsIgnoreCase("desc")) ? Direction.DESC : Direction.ASC;
+            sort = by(direction, sortParam);
+        }
+
+        return new PageableAndSort(PageRequest.of(page, size, sort), sortParam, direction);
+
     }
 
-    private static PageDetails calculatePageDetails(Page<?> page) {
+
+    private static PageDetails calculatePageDetails(Page<?> page, String sortField, Direction sortDirection) {
         int currentPage = page.getNumber();
         int totalPages = page.getTotalPages();
         int pageSize = page.getSize();
@@ -39,7 +67,7 @@ public class PagingUtils {
         int startEntry = currentPage * pageSize + 1;
         int endEntry = Math.min(startEntry + pageSize - 1, (int) totalElements);
 
-        return new PageDetails(startPage, endPage, currentPage, totalPages, hasPrevious, hasNext, startEntry, endEntry, totalElements, page);
+        return new PageDetails(startPage, endPage, currentPage, totalPages, hasPrevious, hasNext, startEntry, endEntry, totalElements, page, sortField, sortDirection);
     }
 
     private static int calculateStartPage(int currentPage, int totalPages) {

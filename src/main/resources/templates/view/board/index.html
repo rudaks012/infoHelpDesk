@@ -7,6 +7,9 @@
 
 
 <form id="board" action="/board/index.do" method="get" autocomplete="off">
+  <input type="hidden" id="sortValue" name="sort" th:value="${pageDetails.sortField}">
+  <input type="hidden" id="orderValue" name="order" th:value="${pageDetails.sortDirection}">
+
   <div class="container-fluid">
     <h1 class="h3 mb-2 text-gray-800">Board Index</h1>
     <div class="my-2">
@@ -27,21 +30,21 @@
             <thead>
             <tr>
               <th>순번</th>
-              <th>제목</th>
-              <th>작성자</th>
-              <th>작성일</th>
-              <th>조회수</th>
+              <th><a href="#" onclick="updateFormAndSubmit('board','bbsSubject')">제목</a></th>
+              <th><a href="#" onclick="updateFormAndSubmit('board','bbsWriter')">작성자</a></th>
+              <th><a href="#" onclick="updateFormAndSubmit('board','bbsRegdate')">작성일</a></th>
+              <th><a href="#" onclick="updateFormAndSubmit('board','bbsHit')">조회수</a></th>
               <th>연락처</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="tableBody">
             <tr th:each="board : ${boardList}">
               <td th:text="${board.bbsSubject}">게시판 제목</td>
               <td th:text="${board.bbsSubject}">게시판 제목</td>
-              <td th:text="${board.bbs_writer}">작성자</td>
-              <td th:text="${board.bbs_regdate}">작성일</td>
-              <td th:text="${board.bbs_hit}">조회수</td>
-              <td th:text="${board.bbs_call}">연락처</td>
+              <td th:text="${board.bbsWriter}">작성자</td>
+              <td th:text="${board.bbsRegdate}">작성일</td>
+              <td th:text="${board.bbsHit}">조회수</td>
+              <td th:text="${board.bbsCall}">연락처</td>
             </tr>
             </tbody>
           </table>

@@ -20,6 +20,13 @@
 
 <div class="pagination" th:fragment="pagination(formId)">
   <input type="hidden" id="pageValue" name="page">
+
+  <div>
+    <span th:text="${pageDetails.startEntry}">1</span> 에서
+    <span th:text="${pageDetails.endEntry}">10</span> 까지 표시중
+    <span th:text="${pageDetails.totalElements}">57</span> 항목 중
+  </div>
+
   <button class="page-link"
           th:if="${pageDetails.hasPrevious}"
           th:data-page="${pageDetails.currentPage - 1}"

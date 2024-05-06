@@ -23,8 +23,8 @@ public abstract class BaseEntity {
     private Long bbs_num;
 
     @CreatedDate
-    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
-    private LocalDateTime bbs_regdate;
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false, name = "bbs_regdate", nullable = false)
+    private LocalDateTime bbsRegdate;
 
     public void setBbs_num(Long bbs_num) {
         this.bbs_num = bbs_num;

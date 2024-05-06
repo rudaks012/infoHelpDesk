@@ -17,80 +17,80 @@ public class Board extends BaseEntity {
     private Long bbs_num;
 
     @Column(name = "bbs_idx", nullable = false)
-    private Long bbs_idx;
+    private Long bbsIdx;
 
     @Column(name = "bbs_parent_num", nullable = false)
-    private Long bbs_parent_num;
+    private Long bbsParentNum;
 
     @Column(name = "bbs_thread", nullable = false)
-    private Long bbs_thread;
+    private Long bbsThread;
 
     @Column(name = "bbs_depth", nullable = false)
-    private Long bbs_depth;
+    private Long bbsDepth;
 
     @Column(name = "bbs_ask_type", nullable = false)
-    private Integer bbs_ask_type;
+    private Integer bbsAskType;
 
     @Column(name = "bbs_status", nullable = false)
-    private Integer bbs_status;
+    private Integer bbsStatus;
 
     @Column(name = "bbs_notice", nullable = false)
-    private Integer bbs_notice = 0;
+    private Integer bbsNotice = 0;
 
     @Column(name = "bbs_secret", nullable = false)
-    private Integer bbs_secret = 0;
+    private Integer bbsSecret = 0;
 
     @Column(name = "bbs_cate", nullable = false)
-    private Integer bbs_cate = 1;
+    private Integer bbsCate = 1;
 
     @Column(name = "bbs_delete", nullable = false)
-    private Integer bbs_delete = 1;
+    private Integer bbsDelete = 1;
 
     @Column(name = "bbs_hit", nullable = false)
-    private Long bbs_hit = 0L;
+    private Long bbsHit = 0l;
 
     @Column(name = "bbs_ip", nullable = false, length = 15)
-    private String bbs_ip = "";
+    private String bbsIp = "";
 
     @Column(name = "bbs_subject", nullable = false, length = 100)
     private String bbsSubject;
 
     @Column(name = "bbs_delete_yn", nullable = false, length = 5)
-    private String bbs_delete_yn = "N";
+    private String bbsDeleteYn = "n";
 
     @Column(name = "bbs_userid", nullable = false, length = 50)
-    private String bbs_userid = "admin";
+    private String bbsUserid = "admin";
 
     @Column(name = "bbs_writer", nullable = false, length = 50)
-    private String bbs_writer;
+    private String bbsWriter;
 
     @Column(name = "bbs_alarm")
-    private Integer bbs_alarm;
+    private Integer bbsAlarm;
 
     @Column(name = "bbs_moddate")
-    private LocalDateTime bbs_moddate;
+    private LocalDateTime bbsModdate;
 
     @Column(name = "bbs_deldate")
-    private LocalDateTime bbs_deldate;
+    private LocalDateTime bbsDeldate;
 
     @Column(name = "bbs_passwd")
-    private String bbs_passwd;
+    private String bbsPasswd;
 
     @Column(name = "manage_code", length = 10)
-    private String manage_code;
+    private String manageCode;
 
     @Column(name = "bbs_useremail", length = 50)
-    private String bbs_useremail;
+    private String bbsUseremail;
 
     @Column(name = "bbs_shelf", length = 50)
-    private String bbs_shelf;
+    private String bbsShelf;
 
     @Column(name = "bbs_name", length = 50)
-    private String bbs_name;
+    private String bbsName;
 
     @Column(name = "bbs_call", length = 50)
-    private String bbs_call;
+    private String bbsCall;
 
     @Column(name = "bbs_contents", columnDefinition = "TEXT")
-    private String bbs_contents;
+    private String bbsContents;
 }
