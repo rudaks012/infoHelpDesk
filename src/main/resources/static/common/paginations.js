@@ -23,7 +23,7 @@ function pagingSubmitForm(event, page, formId) {
   form.submit();
 }
 
-function updateFormAndSubmit(formId, sortField) {
+function updateColumnSort(formId, sortField) {
   var form = document.getElementById(formId);
   var url = new URL(form.action, window.location.origin);
 

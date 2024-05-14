@@ -5,7 +5,6 @@
       layout:fragment="Content"
 >
 
-
 <form id="board" action="/board/index.do" method="get" autocomplete="off">
   <input type="hidden" id="sortValue" name="sort" th:value="${pageDetails.sortField}">
   <input type="hidden" id="orderValue" name="order" th:value="${pageDetails.sortDirection}">
@@ -26,14 +25,25 @@
       </div>
       <div class="card-body">
         <div class="table-responsive">
+          <!-- Search Form -->
+          <form class="form-inline mb-3">
+            <select class="form-control mr-sm-2" name="searchField">
+              <option value="bbsSubject">제목</option>
+              <option value="bbsWriter">작성자</option>
+              <option value="bbsRegdate">작성일</option>
+              <option value="bbsHit">조회수</option>
+            </select>
+            <input class="form-control mr-sm-2" type="search" placeholder="검색어를 입력해주세요" aria-label="Search" name="searchValue" th:value="${param.searchValue}">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">검색</button>
+          </form>
           <table class="table table-bordered" width="100%" cellspacing="0">
             <thead>
             <tr>
               <th>순번</th>
-              <th><a href="#" onclick="updateFormAndSubmit('board','bbsSubject')">제목</a></th>
-              <th><a href="#" onclick="updateFormAndSubmit('board','bbsWriter')">작성자</a></th>
-              <th><a href="#" onclick="updateFormAndSubmit('board','bbsRegdate')">작성일</a></th>
-              <th><a href="#" onclick="updateFormAndSubmit('board','bbsHit')">조회수</a></th>
+              <th><a href="#" onclick="updateColumnSort('board','bbsSubject')">제목</a></th>
+              <th><a href="#" onclick="updateColumnSort('board','bbsWriter')">작성자</a></th>
+              <th><a href="#" onclick="updateColumnSort('board','bbsRegdate')">작성일</a></th>
+              <th><a href="#" onclick="updateColumnSort('board','bbsHit')">조회수</a></th>
               <th>연락처</th>
             </tr>
             </thead>
@@ -42,7 +52,7 @@
               <td th:text="${board.bbsSubject}">게시판 제목</td>
               <td th:text="${board.bbsSubject}">게시판 제목</td>
               <td th:text="${board.bbsWriter}">작성자</td>
-              <td th:text="${board.bbsRegdate}">작성일</td>
+              <td th:text="${#temporals.format(board.bbsRegdate, 'yyyy-MM-dd HH:mm')}">작성일</td>
               <td th:text="${board.bbsHit}">조회수</td>
               <td th:text="${board.bbsCall}">연락처</td>
             </tr>
