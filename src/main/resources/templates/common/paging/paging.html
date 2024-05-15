@@ -1,73 +1,77 @@
 <style>
-  .pagination a {
+  .search-area {
+    display: flex;
+    justify-content: center; /* 요소들을 수평 중앙에 정렬 */
+    align-items: center; /* 요소들을 수직 중앙에 정렬 */
+    margin-bottom: 20px; /* 여백을 추가하여 시각적으로 분리 */
+  }
+
+  .form-control {
+    margin-right: 10px; /* 폼 컨트롤 간의 간격 조정 */
+  }
+
+  .btn-outline-success {
+    color: #4CAF50;
+    border-color: #4CAF50;
+  }
+
+  .btn-outline-success:hover {
+    background-color: #4CAF50;
+    color: white;
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center; /* 페이지네이션 버튼을 중앙에 정렬 */
+    width: 100%; /* 전체 너비를 사용 */
+    margin-top: 10px;
+  }
+
+  .pagination a, .pagination button {
     padding: 8px 16px;
     margin: 5px;
     border: 1px solid #ccc;
     text-decoration: none;
+    background-color: white;
+    color: black;
   }
 
-  .pagination a.current {
+  .pagination a.current, .pagination button.active {
     background-color: #4CAF50;
     color: white;
-    border: 1px solid #4CAF50;
+    border-color: #4CAF50;
   }
 
-  .pagination a:hover:not(.current) {
+  .pagination a:hover:not(.current), .pagination button:hover:not(.active) {
     background-color: #ddd;
   }
-
 </style>
-
-<div class="pagination" th:fragment="pagination(formId)">
+<div class="container-fluid" th:fragment="pagination(formId)">
   <input type="hidden" th:field="*{sortValue}" th:value="${pageDetails.sortField}">
   <input type="hidden" th:field="*{orderValue}" th:value="${pageDetails.sortDirection}">
   <input type="hidden" th:field="*{pageValue}">
   <input type="hidden" th:field="*{sizeValue}">
 
-  <div>
-    <span th:text="${pageDetails.startEntry}">1</span> 에서
-    <span th:text="${pageDetails.endEntry}">10</span> 까지 표시중
-    <span th:text="${pageDetails.totalElements}">57</span> 항목 중
+  <div class="search-area">
+    <select th:field="*{searchField}" class="form-control">
+      <option th:text="제목" th:value="bbsSubject">제목</option>
+      <option th:text="작성자" th:value="bbsWriter">작성자</option>
+      <option th:text="작성일" th:value="bbsRegdate">작성일</option>
+      <option th:text="조회수" th:value="bbsHit">조회수</option>
+    </select>
+    <input class="form-control" type="search" placeholder="검색어를 입력해주세요" th:field="*{searchValue}">
+    <button class="btn btn-outline-success" type="button" th:data-form-id="${formId}" onclick="submitSearchForm(this.dataset.formId)">검색</button>
   </div>
 
-  <button class="page-link"
-          th:if="${pageDetails.hasPrevious}"
-          th:data-page="${pageDetails.currentPage - 1}"
-          th:data-form-id="${formId}"
-          th:onclick="pagingSubmitForm(event, this.getAttribute('data-page'), this.getAttribute('data-form-id'))"
-          th:text="'이전'">이전
-  </button>
+  <div class="counts">
+    <span th:text="${pageDetails.startEntry}">1</span> - <span th:text="${pageDetails.endEntry}">10</span> / <span th:text="${pageDetails.totalElements}">57</span>
+  </div>
 
-  <span th:each="i : ${#numbers.sequence(pageDetails.startPage, pageDetails.endPage)}" class="page-item" th:classappend="${i == pageDetails.currentPage} ? 'active' : ''">
-    <button class="page-link"
-            th:data-page="${i}"
-            th:data-form-id="${formId}"
-            th:onclick="pagingSubmitForm(event, this.getAttribute('data-page'), this.getAttribute('data-form-id'))"
-            th:text="${i + 1}">1</button>
-</span>
-
-  <button class="page-link"
-          th:if="${pageDetails.hasNext}"
-          th:data-page="${pageDetails.currentPage + 1}"
-          th:data-form-id="${formId}"
-          th:onclick="pagingSubmitForm(event, this.getAttribute('data-page'), this.getAttribute('data-form-id'))"
-          th:text="'다음'">다음
-  </button>
-  <br>
-  <!-- Search Form -->
-  <select th:field="*{searchField}" class="form-control mr-sm-2">
-    <option th:text="제목" th:value="bbsSubject"></option>
-    <option th:text="작성자" th:value="bbsWriter"></option>
-    <option th:text="작성일" th:value="bbsRegdate"></option>
-    <option th:text="조회수" th:value="bbsHit"></option>
-  </select>
-
-  <input class="form-control mr-sm-2" type="search" placeholder="검색어를 입력해주세요" th:field="*{searchValue}">
-
-  <button id="searchButton" class="btn btn-outline-success my-2 my-sm-0"
-          type="button" th:data-form-id="${formId}" onclick="submitSearchForm(this.dataset.formId)">검색
-  </button>
+  <div class="pagination">
+    <button class="page-link" th:if="${pageDetails.hasPrevious}" th:data-page="${pageDetails.currentPage - 1}" th:data-form-id="${formId}" th:onclick="pagingSubmitForm(event, this.getAttribute('data-page'), this.getAttribute('data-form-id'))">이전</button>
+    <span th:each="i : ${#numbers.sequence(pageDetails.startPage, pageDetails.endPage)}" class="page-item" th:classappend="${i == pageDetails.currentPage} ? 'active' : ''">
+            <button class="page-link" th:data-page="${i}" th:data-form-id="${formId}" th:onclick="pagingSubmitForm(event, this.getAttribute('data-page'), this.getAttribute('data-form-id'))" th:text="${i + 1}"></button>
+        </span>
+    <button class="page-link" th:if="${pageDetails.hasNext}" th:data-page="${pageDetails.currentPage + 1}" th:data-form-id="${formId}" th:onclick="pagingSubmitForm(event, this.getAttribute('data-page'), this.getAttribute('data-form-id'))">다음</button>
+  </div>
 </div>
-
-
-
