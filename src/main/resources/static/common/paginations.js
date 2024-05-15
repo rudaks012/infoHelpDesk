@@ -40,4 +40,10 @@ function updateColumnSort(formId, sortField) {
   form.submit();
 }
 
+function submitSearchForm(formId) {
+  var form = document.getElementById(formId);
+  document.getElementById('pageValue').value = 0;
+  form.submit();
+}
+
 

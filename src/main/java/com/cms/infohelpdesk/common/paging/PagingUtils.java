@@ -4,19 +4,53 @@ import static org.springframework.data.domain.Sort.Direction;
 import static org.springframework.data.domain.Sort.by;
 
 import com.cms.infohelpdesk.common.base.BaseEntity;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.QueryResults;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.PathBuilder;
+import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public class PagingUtils {
 
-    public static <T extends BaseEntity> PageDetails getPageDetails(HttpServletRequest request, JpaRepository repository, T entity) {
+    public static <T extends BaseEntity> PageDetails getPageDetails(HttpServletRequest request, JpaRepository<T, ?> repository, T entity, JPAQueryFactory queryFactory, Class<T> type) {
         PageableAndSort pageableAndSort = extractPageable(request, entity);
-        Page<?> page = repository.findAll(pageableAndSort.getPageable());
+        BooleanBuilder searchCondition = new BooleanBuilder();
+
+        PathBuilder<T> entityPath = new PathBuilder<>(type, type.getSimpleName().toLowerCase()); // 메타모델 동적 접근
+
+        if (entity.getSearchField() != null && !entity.getSearchField().isEmpty() && entity.getSearchValue() != null && !entity.getSearchValue().isEmpty()) {
+            StringPath path = entityPath.getString(entity.getSearchField()); // 검색할 필드를 StringPath로 동적 지정
+            searchCondition.and(path.containsIgnoreCase(entity.getSearchValue())); // 검색 조건 추가
+        }
+
+        String sortField = pageableAndSort.getSortField();
+        StringPath pathForSortField = entityPath.getString(sortField);
+        OrderSpecifier<?> orderSpecifier = new OrderSpecifier<>(Order.valueOf(pageableAndSort.getSortDirection().name()), pathForSortField);
+
+        QueryResults<T> results = queryFactory.selectFrom(entityPath)
+                                              .where(searchCondition)
+                                              .offset(pageableAndSort.getPageable().getOffset())
+                                              .limit(pageableAndSort.getPageable().getPageSize())
+                                              .orderBy(orderSpecifier)
+                                              .fetchResults(); // 결과와 페이징 정보 가져오기
+
+        List<T> content = results.getResults(); // 결과 목록
+        long total = results.getTotal(); // 전체 결과 수
+
+        Page<T> page = new PageImpl<>(content, pageableAndSort.getPageable(), total); // Page<T> 생성
+
         return calculatePageDetails(page, pageableAndSort.getSortField(), pageableAndSort.getSortDirection());
     }
+
 
     private static <T extends BaseEntity> PageableAndSort extractPageable(HttpServletRequest request, T entity) {
 
@@ -42,15 +76,20 @@ public class PagingUtils {
         }
 
         // 정렬 파라미터 처리
-        Sort sort = by(Direction.ASC, "bbsRegdate"); // 기본 정렬
-        String sortParam = entity.getSortValue();
-        ;
-        Direction direction = Direction.ASC; // 기본값 설정
-        if (sortParam != null && !sortParam.trim().isEmpty()) {
-            String sortOrder = entity.getOrderValue();
-            direction = (sortOrder != null && sortOrder.equalsIgnoreCase("desc")) ? Direction.DESC : Direction.ASC;
-            sort = by(direction, sortParam);
+        Sort sort = by(Direction.DESC, "bbsRegdate"); // 기본 정렬 설정
+        if (entity.getSortValue() == null || entity.getSortValue().trim().isEmpty()) {
+            entity.setSortValue("bbsRegdate");
         }
+        String sortParam = entity.getSortValue();
+
+        Direction direction;
+        String sortOrder = entity.getOrderValue();
+        if (sortOrder != null && sortOrder.equalsIgnoreCase("asc")) {
+            direction = Direction.ASC;
+        } else {
+            direction = Direction.DESC;
+        }
+        sort = by(direction, sortParam);
 
         return new PageableAndSort(PageRequest.of(page, size, sort), sortParam, direction);
 

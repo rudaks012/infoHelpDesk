@@ -35,7 +35,8 @@
           th:data-page="${pageDetails.currentPage - 1}"
           th:data-form-id="${formId}"
           th:onclick="pagingSubmitForm(event, this.getAttribute('data-page'), this.getAttribute('data-form-id'))"
-          th:text="'이전'">이전</button>
+          th:text="'이전'">이전
+  </button>
 
   <span th:each="i : ${#numbers.sequence(pageDetails.startPage, pageDetails.endPage)}" class="page-item" th:classappend="${i == pageDetails.currentPage} ? 'active' : ''">
     <button class="page-link"
@@ -50,7 +51,23 @@
           th:data-page="${pageDetails.currentPage + 1}"
           th:data-form-id="${formId}"
           th:onclick="pagingSubmitForm(event, this.getAttribute('data-page'), this.getAttribute('data-form-id'))"
-          th:text="'다음'">다음</button>
+          th:text="'다음'">다음
+  </button>
+  <br>
+  <!-- Search Form -->
+  <select th:field="*{searchField}" class="form-control mr-sm-2">
+    <option th:text="제목" th:value="bbsSubject"></option>
+    <option th:text="작성자" th:value="bbsWriter"></option>
+    <option th:text="작성일" th:value="bbsRegdate"></option>
+    <option th:text="조회수" th:value="bbsHit"></option>
+  </select>
 
+  <input class="form-control mr-sm-2" type="search" placeholder="검색어를 입력해주세요" th:field="*{searchValue}">
+
+  <button id="searchButton" class="btn btn-outline-success my-2 my-sm-0"
+          type="button" th:data-form-id="${formId}" onclick="submitSearchForm(this.dataset.formId)">검색
+  </button>
 </div>
+
+
 

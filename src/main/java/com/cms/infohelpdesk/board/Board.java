@@ -1,6 +1,7 @@
 package com.cms.infohelpdesk.board;
 
 import com.cms.infohelpdesk.common.base.BaseEntity;
+import com.querydsl.core.annotations.QueryEntity;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
+@QueryEntity
 @Entity
 @Table(name = "board")
 @NoArgsConstructor
