@@ -19,7 +19,10 @@
 </style>
 
 <div class="pagination" th:fragment="pagination(formId)">
-  <input type="hidden" id="pageValue" name="page">
+  <input type="hidden" th:field="*{sortValue}" th:value="${pageDetails.sortField}">
+  <input type="hidden" th:field="*{orderValue}" th:value="${pageDetails.sortDirection}">
+  <input type="hidden" th:field="*{pageValue}">
+  <input type="hidden" th:field="*{sizeValue}">
 
   <div>
     <span th:text="${pageDetails.startEntry}">1</span> 에서

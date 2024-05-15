@@ -3,6 +3,7 @@ package com.cms.infohelpdesk.common.paging;
 import static org.springframework.data.domain.Sort.Direction;
 import static org.springframework.data.domain.Sort.by;
 
+import com.cms.infohelpdesk.common.base.BaseEntity;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,15 +12,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public class PagingUtils {
 
-    public static PageDetails getPageDetails(HttpServletRequest request, JpaRepository repository, Class entityType) {
-        PageableAndSort pageableAndSort = extractPageable(request);
+    public static <T extends BaseEntity> PageDetails getPageDetails(HttpServletRequest request, JpaRepository repository, T entity) {
+        PageableAndSort pageableAndSort = extractPageable(request, entity);
         Page<?> page = repository.findAll(pageableAndSort.getPageable());
         return calculatePageDetails(page, pageableAndSort.getSortField(), pageableAndSort.getSortDirection());
     }
 
-    private static PageableAndSort extractPageable(HttpServletRequest request) {
+    private static <T extends BaseEntity> PageableAndSort extractPageable(HttpServletRequest request, T entity) {
+
         // 페이지와 사이즈 파라미터 처리
-        String pageParam = request.getParameter("page");
+        String pageParam = entity.getPageValue();
         int page = 0; // 기본값 0
         if (pageParam != null && !pageParam.isEmpty()) {
             try {
@@ -29,7 +31,7 @@ public class PagingUtils {
             }
         }
 
-        String sizeParam = request.getParameter("size");
+        String sizeParam = entity.getSizeValue();
         int size = 10; // 기본값 10
         if (sizeParam != null && !sizeParam.isEmpty()) {
             try {
@@ -40,11 +42,12 @@ public class PagingUtils {
         }
 
         // 정렬 파라미터 처리
-        Sort sort = by(Direction.ASC, "bbsSubject"); // 기본 정렬
-        String sortParam = request.getParameter("sort");
+        Sort sort = by(Direction.ASC, "bbsRegdate"); // 기본 정렬
+        String sortParam = entity.getSortValue();
+        ;
         Direction direction = Direction.ASC; // 기본값 설정
         if (sortParam != null && !sortParam.trim().isEmpty()) {
-            String sortOrder = request.getParameter("order");
+            String sortOrder = entity.getOrderValue();
             direction = (sortOrder != null && sortOrder.equalsIgnoreCase("desc")) ? Direction.DESC : Direction.ASC;
             sort = by(direction, sortParam);
         }

@@ -5,9 +5,7 @@
       layout:fragment="Content"
 >
 
-<form id="board" action="/board/index.do" method="get" autocomplete="off">
-  <input type="hidden" id="sortValue" name="sort" th:value="${pageDetails.sortField}">
-  <input type="hidden" id="orderValue" name="order" th:value="${pageDetails.sortDirection}">
+<form id="board" th:action="@{/board/index.do}" th:object="${board}" method="get" autocomplete="off">
 
   <div class="container-fluid">
     <h1 class="h3 mb-2 text-gray-800">Board Index</h1>

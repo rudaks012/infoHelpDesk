@@ -15,15 +15,15 @@ public class MessageResponse {
     }
 
     public static MessageResponse updated(String redirectUrl) {
-        return new MessageResponse("글이 수정되었습니다.",redirectUrl);
+        return new MessageResponse("글이 수정되었습니다.", redirectUrl);
     }
 
     public static MessageResponse deleted(String redirectUrl) {
-        return new MessageResponse("글이 삭제되었습니다.",redirectUrl);
+        return new MessageResponse("글이 삭제되었습니다.", redirectUrl);
     }
 
     public static MessageResponse replied(String redirectUrl) {
-        return new MessageResponse("답글을 달았습니다.",redirectUrl);
+        return new MessageResponse("답글을 달았습니다.", redirectUrl);
     }
 
 }

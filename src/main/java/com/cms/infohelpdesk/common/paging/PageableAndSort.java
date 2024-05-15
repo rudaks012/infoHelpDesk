@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 @Getter
 @AllArgsConstructor
 public class PageableAndSort {
+
     private final Pageable pageable;
     private final String sortField;
     private final Direction sortDirection;

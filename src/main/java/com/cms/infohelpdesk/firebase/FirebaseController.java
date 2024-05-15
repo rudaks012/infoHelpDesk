@@ -16,12 +16,12 @@ public class FirebaseController {
     private FirebaseService firebaseService;
 
     @PostMapping("/sendNotification")
-    public ResponseEntity<?> sendNotification(@Valid @RequestBody FirebaseRequest dto){
+    public ResponseEntity<?> sendNotification(@Valid @RequestBody FirebaseRequest dto) {
 
         // 테스트로 한 번 찍어본다.
-        System.out.println("테스트 : "+dto.getNotification().getToken());
-        System.out.println("테스트 : "+dto.getNotification().getTitle());
-        System.out.println("테스트 : "+dto.getNotification().getBody());
+        System.out.println("테스트 : " + dto.getNotification().getToken());
+        System.out.println("테스트 : " + dto.getNotification().getTitle());
+        System.out.println("테스트 : " + dto.getNotification().getBody());
 
         return firebaseService.sendNotification(dto);
     }

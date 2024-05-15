@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,10 +28,13 @@ public class BoardController {
 
 
     @GetMapping("/index.do")
-    public String boardIndex(Model model, HttpServletRequest request) {
-        PageDetails pageDetails = PagingUtils.getPageDetails(request, boardRepository, Board.class);
+    public String boardIndex(Model model, @ModelAttribute Board board, HttpServletRequest request) {
+
+        PageDetails pageDetails = PagingUtils.getPageDetails(request, boardRepository, board);
         model.addAttribute("pageDetails", pageDetails);
+        model.addAttribute("board", board);
         model.addAttribute("boardList", pageDetails.getPageData());
+
         return rootPath + "index";
     }
 

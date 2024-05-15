@@ -33,14 +33,11 @@ function updateColumnSort(formId, sortField) {
     var currentOrder = document.getElementById('orderValue').value || 'ASC';
     var newOrder = (currentSort === sortField && currentOrder === 'ASC') ? 'DESC' : 'ASC';
 
-    url.searchParams.set('sort', sortField);
-    url.searchParams.set('order', newOrder);
-
     document.getElementById('sortValue').value = sortField;
     document.getElementById('orderValue').value = newOrder;
   }
 
-  form.action = url.toString();
   form.submit();
 }
+
 
