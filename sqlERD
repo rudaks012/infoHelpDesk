@@ -1,0 +1,38 @@
+
+## MENU
+CREATE TABLE MENUS (
+menu_idx INT AUTO_INCREMENT PRIMARY KEY COMMENT '메뉴의 고유 식별자',
+homepage_id VARCHAR(255) NOT NULL COMMENT '홈페이지ID',
+menu_title VARCHAR(255) NOT NULL COMMENT '메뉴의 제목',
+menu_path VARCHAR(255) NOT NULL COMMENT '메뉴의 경로',
+menu_display_order INT NOT NULL COMMENT '메뉴의 표시 순서',
+menu_parent_id INT DEFAULT NULL COMMENT '상위 메뉴 ID (자기 참조)',
+menu_visible BOOLEAN NOT NULL COMMENT '메뉴의 노출 여부',
+menu_mobile_visible BOOLEAN NOT NULL COMMENT '메뉴의 모바일 노출 여부',
+menu_active BOOLEAN NOT NULL COMMENT '메뉴의 활성 상태',
+menu_content_type ENUM('HTML', 'BOARD', 'MODULE', 'INTERNALLINK', 'EXTERNALLINK') NOT NULL COMMENT '메뉴의 내용 유형',
+menu_internal_link VARCHAR(255) COMMENT '내부 링크 URL',
+created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '생성 시간',
+menu_external_link VARCHAR(255) COMMENT '외부 링크 URL',
+FOREIGN KEY (menu_parent_id) REFERENCES menus(menu_idx)
+) COMMENT='메뉴 테이블: 시스템 내 모든 메뉴를 저장';
+
+
+CREATE TABLE MENU_HISTORIES (
+history_id INT AUTO_INCREMENT PRIMARY KEY COMMENT '히스토리 고유 식별자',
+menu_idx INT NOT NULL COMMENT '변경된 메뉴 ID',
+changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '변경 시간',
+changed_by INT NOT NULL COMMENT '변경을 수행한 사용자 ID',
+change_description TEXT COMMENT '변경 내역 설명',
+FOREIGN KEY (menu_idx) REFERENCES menus(menu_idx)
+) COMMENT='메뉴 히스토리 테이블: 메뉴의 변경 사항 기록';
+
+CREATE TABLE MENU_LOGS (
+log_id INT AUTO_INCREMENT PRIMARY KEY COMMENT '로그 고유 식별자',
+action ENUM('CREATE', 'UPDATE', 'DELETE') COMMENT '실행된 작업 유형',
+created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '생성 시간',
+user_id INT NOT NULL COMMENT '작업을 수행한 사용자 ID',
+menu_idx INT NOT NULL COMMENT '관련 메뉴 ID',
+FOREIGN KEY (menu_idx) REFERENCES menus(menu_idx)
+) COMMENT='메뉴 로그 테이블: 메뉴 관련 사용자 작업 로깅';
+## MENU
