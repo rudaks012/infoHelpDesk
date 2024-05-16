@@ -5,7 +5,7 @@ plugins {
     id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'  // QueryDSL 플러그인 추가
 }
 
-group = 'com.cms'
+group = 'kr.co'
 version = '0.0.1-SNAPSHOT'
 
 java {
