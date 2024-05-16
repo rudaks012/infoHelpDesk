@@ -1,9 +1,10 @@
-package com.cms.infohelpdesk.common.paging;
+package com.cms.infohelpdesk.util.paging;
 
 import static org.springframework.data.domain.Sort.Direction;
 import static org.springframework.data.domain.Sort.by;
 
 import com.cms.infohelpdesk.common.base.BaseEntity;
+import com.cms.infohelpdesk.util.search.SearchBuilder;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Order;
@@ -12,7 +13,6 @@ import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -21,16 +21,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public class PagingUtils {
 
-    public static <T extends BaseEntity> PageDetails getPageDetails(HttpServletRequest request, JpaRepository<T, ?> repository, T entity, JPAQueryFactory queryFactory, Class<T> type) {
-        PageableAndSort pageableAndSort = extractPageable(request, entity);
-        BooleanBuilder searchCondition = new BooleanBuilder();
+    public static <T extends BaseEntity> PageDetails getPageDetails(JpaRepository<T, ?> repository, T entity, JPAQueryFactory queryFactory, Class<T> type) {
+        PageableAndSort pageableAndSort = extractPageable(entity);
+        PathBuilder<T> entityPath = new PathBuilder<>(type, type.getSimpleName().toLowerCase());
 
-        PathBuilder<T> entityPath = new PathBuilder<>(type, type.getSimpleName().toLowerCase()); // 메타모델 동적 접근
-
-        if (entity.getSearchField() != null && !entity.getSearchField().isEmpty() && entity.getSearchValue() != null && !entity.getSearchValue().isEmpty()) {
-            StringPath path = entityPath.getString(entity.getSearchField()); // 검색할 필드를 StringPath로 동적 지정
-            searchCondition.and(path.containsIgnoreCase(entity.getSearchValue())); // 검색 조건 추가
-        }
+        BooleanBuilder searchCondition = SearchBuilder.buildSearchCriteria(entityPath, entity.getSearchField(), entity.getSearchValue());
 
         String sortField = pageableAndSort.getSortField();
         StringPath pathForSortField = entityPath.getString(sortField);
@@ -41,18 +36,18 @@ public class PagingUtils {
                                               .offset(pageableAndSort.getPageable().getOffset())
                                               .limit(pageableAndSort.getPageable().getPageSize())
                                               .orderBy(orderSpecifier)
-                                              .fetchResults(); // 결과와 페이징 정보 가져오기
+                                              .fetchResults();
 
-        List<T> content = results.getResults(); // 결과 목록
-        long total = results.getTotal(); // 전체 결과 수
+        List<T> content = results.getResults();
+        long total = results.getTotal();
 
-        Page<T> page = new PageImpl<>(content, pageableAndSort.getPageable(), total); // Page<T> 생성
+        Page<T> page = new PageImpl<>(content, pageableAndSort.getPageable(), total);
 
         return calculatePageDetails(page, pageableAndSort.getSortField(), pageableAndSort.getSortDirection());
     }
 
 
-    private static <T extends BaseEntity> PageableAndSort extractPageable(HttpServletRequest request, T entity) {
+    private static <T extends BaseEntity> PageableAndSort extractPageable(T entity) {
 
         // 페이지와 사이즈 파라미터 처리
         String pageParam = entity.getPageValue();

@@ -1,4 +1,4 @@
-package com.cms.infohelpdesk.common.paging;
+package com.cms.infohelpdesk.util.paging;
 
 import static org.springframework.data.domain.Sort.Direction;
 

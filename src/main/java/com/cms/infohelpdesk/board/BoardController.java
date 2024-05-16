@@ -1,10 +1,9 @@
 package com.cms.infohelpdesk.board;
 
 import com.cms.infohelpdesk.common.base.MessageResponse;
-import com.cms.infohelpdesk.common.paging.PageDetails;
-import com.cms.infohelpdesk.common.paging.PagingUtils;
+import com.cms.infohelpdesk.util.paging.PageDetails;
+import com.cms.infohelpdesk.util.paging.PagingUtils;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,9 +31,9 @@ public class BoardController {
         this.queryFactory = queryFactory;
     }
     @GetMapping("/index.do")
-    public String boardIndex(Model model, @ModelAttribute Board board, HttpServletRequest request) {
+    public String boardIndex(Model model, @ModelAttribute Board board) {
 
-        PageDetails pageDetails = PagingUtils.getPageDetails(request, boardRepository, board, queryFactory, Board.class);
+        PageDetails pageDetails = PagingUtils.getPageDetails(boardRepository, board, queryFactory, Board.class);
         model.addAttribute("pageDetails", pageDetails);
         model.addAttribute("board", board);
         model.addAttribute("boardList", pageDetails.getPageData());

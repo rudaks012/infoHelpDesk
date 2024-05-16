@@ -1,4 +1,4 @@
-package com.cms.infohelpdesk.common.base;
+package com.cms.infohelpdesk.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import javax.persistence.EntityManager;
