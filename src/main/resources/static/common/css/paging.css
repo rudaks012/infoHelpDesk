@@ -1,0 +1,66 @@
+
+.pagination {
+  display: inline-block;
+  margin-top: 20px;
+}
+
+.pagination a, .pagination button.page-link {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+  margin: 0 4px;
+  border-radius: 5px;
+  font-size: 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.pagination .active button.page-link {
+  background-color: #4CAF50;
+  color: white;
+  border: 1px solid #4CAF50;
+}
+
+.pagination button.page-link:hover:not(.active) {
+  background-color: #ddd;
+}
+
+.pagination button.page-link:first-child, .pagination button.page-link:last-child {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.pagination button.page-link:hover:first-child, .pagination button.page-link:hover:last-child {
+  background-color: #ccc;
+}
+
+.search-area {
+  margin-bottom: 20px;
+}
+
+.search-area select, .search-area input, .search-area button {
+  margin-right: 10px;
+  padding: 8px;
+  font-size: 16px;
+}
+
+.search-area button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search-area button:hover {
+  background-color: #45a049;
+}
+
+.counts {
+  margin-bottom: 20px;
+  font-size: 18px;
+}
