@@ -23,7 +23,7 @@ public class BoardController {
 
     private final BoardRepository boardRepository;
     private final JPAQueryFactory queryFactory;
-    private final String rootPath = "view/board/";
+    private final String rootPath = "view/app/admin/board/";
 
     @Autowired
     public BoardController(BoardRepository boardRepository, JPAQueryFactory queryFactory) {

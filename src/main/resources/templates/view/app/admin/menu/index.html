@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/defaultLayout}"
+      layout:fragment="Content"
+      xmlns="">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Board Index</title>
+  <link rel="stylesheet" th:href="@{/common/css/menu.css}">
+</head>
+<body>
+<form id="board" th:action="@{/menu/index.do}" th:object="${menu}" method="get" autocomplete="off">
+  <div class="container">
+    <div class="menuSidebar">
+      <div class="menubar">
+        <h2>Menu Management</h2>
+        <button class="btn-sm">Add Menu</button>
+      </div>
+      <div class="menu-list">
+        <div class="menu-item">
+          <div class="menu-item-header">
+            <div class="menu-item-title">
+              <span class="icon folder-icon"></span>
+              <span>메인 메뉴</span>
+            </div>
+            <div class="menu-item-actions">
+              <button class="icon-btn"><span class="icon delete-icon"></span></button>
+              <button class="icon-btn"><span class="icon trash-icon"></span></button>
+              <button class="icon-btn"><span class="icon plus-icon"></span></button>
+            </div>
+          </div>
+          <div class="sub-menu-item">
+            <div class="sub-menu-item-header">
+              <div class="sub-menu-item-title">
+                <span class="icon chevron-right-icon"></span>
+                <span>About</span>
+                <span class="sub-menu-item-path">/about</span>
+              </div>
+              <div class="sub-menu-item-actions">
+                <button class="icon-btn"><span class="icon delete-icon"></span></button>
+                <button class="icon-btn"><span class="icon trash-icon"></span></button>
+                <button class="icon-btn"><span class="icon plus-icon"></span></button>
+              </div>
+            </div>
+            <div class="sub-menu-item-header">
+              <div class="sub-menu-item-title">
+                <span class="icon chevron-right-icon"></span>
+                <span>Services</span>
+                <span class="sub-menu-item-path">/services</span>
+              </div>
+              <div class="sub-menu-item-actions">
+                <button class="icon-btn"><span class="icon delete-icon"></span></button>
+                <button class="icon-btn"><span class="icon trash-icon"></span></button>
+                <button class="icon-btn"><span class="icon plus-icon"></span></button>
+              </div>
+            </div>
+            <div class="sub-menu-item-header">
+              <div class="sub-menu-item-title">
+                <span class="icon chevron-right-icon"></span>
+                <span>Contact</span>
+                <span class="sub-menu-item-path">/contact</span>
+              </div>
+              <div class="sub-menu-item-actions">
+                <button class="icon-btn"><span class="icon delete-icon"></span></button>
+                <button class="icon-btn"><span class="icon trash-icon"></span></button>
+                <button class="icon-btn"><span class="icon plus-icon"></span></button>
+              </div>
+            </div>
+            <div class="nested-sub-menu">
+              <div class="sub-menu-item-header">
+                <div class="sub-menu-item-title">
+                  <span class="icon chevron-right-icon"></span>
+                  <span>About Us</span>
+                  <span class="sub-menu-item-path">/about/us</span>
+                </div>
+                <div class="sub-menu-item-actions">
+                  <button class="icon-btn"><span class="icon delete-icon"></span></button>
+                  <button class="icon-btn"><span class="icon trash-icon"></span></button>
+                  <button class="icon-btn"><span class="icon plus-icon"></span></button>
+                </div>
+              </div>
+              <div class="sub-menu-item-header">
+                <div class="sub-menu-item-title">
+                  <span class="icon chevron-right-icon"></span>
+                  <span>Our Team</span>
+                  <span class="sub-menu-item-path">/about/team</span>
+                </div>
+                <div class="sub-menu-item-actions">
+                  <button class="icon-btn"><span class="icon delete-icon"></span></button>
+                  <button class="icon-btn"><span class="icon trash-icon"></span></button>
+                  <button class="icon-btn"><span class="icon plus-icon"></span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="main-content">
+      <div class="search-bar">
+        <input type="text" placeholder="Search menus...">
+        <button>검색</button>
+        <button>정렬</button>
+      </div>
+      <div class="menu-settings">
+        <div class="menu-details">
+          <h3>메뉴 상세정보</h3>
+          <form>
+            <div class="form-group">
+              <label for="name">메뉴명</label>
+              <input type="text" id="name" placeholder="메뉴명을 입력 해주세요">
+            </div>
+            <div class="form-group">
+              <label for="path">메뉴경로</label>
+              <input type="text" id="path" placeholder="메뉴 경로를 입력 해주세요">
+            </div>
+            <div class="form-group">
+              <label for="type">메뉴 타입</label>
+              <select id="type">
+                <option value="html">HTML</option>
+                <option value="bulletin-board">게시판</option>
+                <option value="program-module">모듈</option>
+                <option value="external">내부링크</option>
+                <option value="internal-link">외부링크</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="visibility">사용여부</label>
+              <select id="visibility">
+                <option value="visible">사용함</option>
+                <option value="hidden">사용안함</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="order">출력순서</label>
+              <input type="number" id="order" placeholder="출력순서를 입력 해주세요">
+            </div>
+            <div class="form-actions">
+              <button type="button">취소</button>
+              <button type="submit">저장</button>
+            </div>
+          </form>
+        </div>
+        <div class="menu-history">
+          <h3>메뉴 이력</h3>
+          <table>
+            <thead>
+            <tr>
+              <th>Date</th>
+              <th>Action</th>
+              <th>User</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>2023-05-23</td>
+              <td>Created</td>
+              <td>John Doe</td>
+            </tr>
+            <tr>
+              <td>2023-05-23</td>
+              <td>Updated</td>
+              <td>John Doe</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+</body>
+</html>
