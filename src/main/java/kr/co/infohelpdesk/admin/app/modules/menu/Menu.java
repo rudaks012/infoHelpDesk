@@ -1,5 +1,7 @@
 package kr.co.infohelpdesk.admin.app.modules.menu;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.querydsl.core.annotations.QueryEntity;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,10 +48,12 @@ public class Menu extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menuParentId")
+    @JsonBackReference
     private Menu parentMenu; //상위 메뉴
 
     @OneToMany(mappedBy = "parentMenu", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @OrderBy("menuDisplayOrder ASC") // 하위 메뉴를 표시 순서에 따라 정렬
+    @JsonManagedReference
     private List<Menu> subMenus = new ArrayList<>();
 
     @Column(nullable = false)

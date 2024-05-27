@@ -7,7 +7,7 @@
 <div th:fragment="menuFragment(menu)">
   <div class="menu-item">
     <div class="menu-item-header">
-      <div class="menu-item-title">
+      <div class="menu-item-title" th:onclick="'showMenuDetails(' + ${menu.menuIdx} + ');'">
         <span class="icon folder-icon"></span>
         <span th:text="${menu.menuTitle}">Default Menu Title</span>
       </div>

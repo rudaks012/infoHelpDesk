@@ -112,17 +112,36 @@
   }
 
   function showMenuDetails(menuIdx) {
-    // AJAX 요청을 통해 메뉴 상세 정보를 가져오고, 이를 화면에 표시
-    console.log('Show details for menu IDX: ' + menuIdx);
-    // 예시 코드
-    fetch(`/get-menu-details/${menuIdx}`)
+    console.log('Request details for menu IDX: ' + menuIdx);
+
+    // 요청할 데이터 객체 생성
+    const requestData = {
+      menuIdx: menuIdx,
+      additionalCriteria: 'someCriteria'  // 추가적인 필터 조건 예시
+    };
+
+    fetch('/menus/details.do', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestData)
+    })
     .then(response => response.json())
     .then(data => {
-      document.getElementById('name').value = data.menuTitle;
-      document.getElementById('path').value = data.menuPath;
-      document.getElementById('type').value = data.menuContentType;
-      document.getElementById('visibility').value = data.menuVisible ? 'visible' : 'hidden';
-      document.getElementById('order').value = data.menuDisplayOrder;
-    });
+      if (data) {
+        document.getElementById('parentName').value = data.parentMenuTitle ? data.parentMenuTitle : '상위메뉴없음';
+        document.getElementById('name').value = data.menuTitle;
+        document.getElementById('path').value = data.menuPath;
+        document.getElementById('type').value = data.menuContentType;
+        document.getElementById('visibility').value = data.menuVisible ? 'visible' : 'hidden';
+        document.getElementById('order').value = data.menuDisplayOrder;
+      } else {
+        console.error('No menu details found.');
+      }
+    })
+    .catch(error => console.error('Error loading the menu details:', error));
   }
+
+
 </script>
