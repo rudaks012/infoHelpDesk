@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Menu Fragment</title>
+</head>
+<body>
+<div th:fragment="menuFragment(menu)">
+  <div class="menu-item">
+    <div class="menu-item-header">
+      <div class="menu-item-title">
+        <span class="icon folder-icon"></span>
+        <span th:text="${menu.menuTitle}">Default Menu Title</span>
+      </div>
+      <div class="menu-item-actions">
+        <button><span>삭제</span></button>
+        <button th:onclick="'addSubMenu(' + ${menu.menuIdx} + ')'"><span>추가</span></button>
+      </div>
+    </div>
+    <div class="sub-menu-item" th:if="${menu.subMenus != null and !menu.subMenus.isEmpty()}">
+      <div th:each="subMenu : ${menu.subMenus}">
+        <div th:replace="common/menu/menuFragment :: menuFragment(${subMenu})">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

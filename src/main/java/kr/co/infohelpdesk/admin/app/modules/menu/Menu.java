@@ -1,7 +1,8 @@
 package kr.co.infohelpdesk.admin.app.modules.menu;
 
 import com.querydsl.core.annotations.QueryEntity;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import kr.co.infohelpdesk.framework.common.base.BaseEntity;
 import lombok.Getter;
@@ -47,7 +49,8 @@ public class Menu extends BaseEntity {
     private Menu parentMenu; //상위 메뉴
 
     @OneToMany(mappedBy = "parentMenu", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Menu> subMenus;
+    @OrderBy("menuDisplayOrder ASC") // 하위 메뉴를 표시 순서에 따라 정렬
+    private List<Menu> subMenus = new ArrayList<>();
 
     @Column(nullable = false)
     private Boolean menuVisible; //메뉴의 노출 여부
@@ -67,6 +70,10 @@ public class Menu extends BaseEntity {
 
     @Column(length = 255)
     private String menuExternalLink; //메뉴의 외부 링크
+
+    public void setSubMenus(List<Menu> subMenus) {
+        this.subMenus = subMenus;
+    }
 
 }
 

@@ -16,85 +16,12 @@
   <div class="container">
     <div class="menuSidebar">
       <div class="menubar">
-        <h2>Menu Management</h2>
-        <button class="btn-sm">Add Menu</button>
+        <h2>메뉴 관리</h2>
+        <button class="btn-sm">등록</button>
       </div>
       <div class="menu-list">
-        <div class="menu-item">
-          <div class="menu-item-header">
-            <div class="menu-item-title">
-              <span class="icon folder-icon"></span>
-              <span>메인 메뉴</span>
-            </div>
-            <div class="menu-item-actions">
-              <button class="icon-btn"><span class="icon delete-icon"></span></button>
-              <button class="icon-btn"><span class="icon trash-icon"></span></button>
-              <button class="icon-btn"><span class="icon plus-icon"></span></button>
-            </div>
-          </div>
-          <div class="sub-menu-item">
-            <div class="sub-menu-item-header">
-              <div class="sub-menu-item-title">
-                <span class="icon chevron-right-icon"></span>
-                <span>About</span>
-                <span class="sub-menu-item-path">/about</span>
-              </div>
-              <div class="sub-menu-item-actions">
-                <button class="icon-btn"><span class="icon delete-icon"></span></button>
-                <button class="icon-btn"><span class="icon trash-icon"></span></button>
-                <button class="icon-btn"><span class="icon plus-icon"></span></button>
-              </div>
-            </div>
-            <div class="sub-menu-item-header">
-              <div class="sub-menu-item-title">
-                <span class="icon chevron-right-icon"></span>
-                <span>Services</span>
-                <span class="sub-menu-item-path">/services</span>
-              </div>
-              <div class="sub-menu-item-actions">
-                <button class="icon-btn"><span class="icon delete-icon"></span></button>
-                <button class="icon-btn"><span class="icon trash-icon"></span></button>
-                <button class="icon-btn"><span class="icon plus-icon"></span></button>
-              </div>
-            </div>
-            <div class="sub-menu-item-header">
-              <div class="sub-menu-item-title">
-                <span class="icon chevron-right-icon"></span>
-                <span>Contact</span>
-                <span class="sub-menu-item-path">/contact</span>
-              </div>
-              <div class="sub-menu-item-actions">
-                <button class="icon-btn"><span class="icon delete-icon"></span></button>
-                <button class="icon-btn"><span class="icon trash-icon"></span></button>
-                <button class="icon-btn"><span class="icon plus-icon"></span></button>
-              </div>
-            </div>
-            <div class="nested-sub-menu">
-              <div class="sub-menu-item-header">
-                <div class="sub-menu-item-title">
-                  <span class="icon chevron-right-icon"></span>
-                  <span>About Us</span>
-                  <span class="sub-menu-item-path">/about/us</span>
-                </div>
-                <div class="sub-menu-item-actions">
-                  <button class="icon-btn"><span class="icon delete-icon"></span></button>
-                  <button class="icon-btn"><span class="icon trash-icon"></span></button>
-                  <button class="icon-btn"><span class="icon plus-icon"></span></button>
-                </div>
-              </div>
-              <div class="sub-menu-item-header">
-                <div class="sub-menu-item-title">
-                  <span class="icon chevron-right-icon"></span>
-                  <span>Our Team</span>
-                  <span class="sub-menu-item-path">/about/team</span>
-                </div>
-                <div class="sub-menu-item-actions">
-                  <button class="icon-btn"><span class="icon delete-icon"></span></button>
-                  <button class="icon-btn"><span class="icon trash-icon"></span></button>
-                  <button class="icon-btn"><span class="icon plus-icon"></span></button>
-                </div>
-              </div>
-            </div>
+        <div th:each="menu : ${menus}">
+          <div th:replace="/common/menu/menuFragment :: menuFragment(${menu})">
           </div>
         </div>
       </div>
@@ -109,6 +36,10 @@
         <div class="menu-details">
           <h3>메뉴 상세정보</h3>
           <form>
+            <div class="form-group">
+              <label for="name">상위메뉴명</label>
+              <input type="text" id="parentName" readonly>
+            </div>
             <div class="form-group">
               <label for="name">메뉴명</label>
               <input type="text" id="name" placeholder="메뉴명을 입력 해주세요">
@@ -174,3 +105,24 @@
 </form>
 </body>
 </html>
+
+<script>
+  function addSubMenu(menuIdx) {
+    alert('Add sub-menu for menu IDX: ' + menuIdx);
+  }
+
+  function showMenuDetails(menuIdx) {
+    // AJAX 요청을 통해 메뉴 상세 정보를 가져오고, 이를 화면에 표시
+    console.log('Show details for menu IDX: ' + menuIdx);
+    // 예시 코드
+    fetch(`/get-menu-details/${menuIdx}`)
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('name').value = data.menuTitle;
+      document.getElementById('path').value = data.menuPath;
+      document.getElementById('type').value = data.menuContentType;
+      document.getElementById('visibility').value = data.menuVisible ? 'visible' : 'hidden';
+      document.getElementById('order').value = data.menuDisplayOrder;
+    });
+  }
+</script>
