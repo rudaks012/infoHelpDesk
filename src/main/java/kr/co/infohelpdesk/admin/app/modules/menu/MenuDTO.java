@@ -8,7 +8,7 @@ public class MenuDTO {
     private String menuTitle;
     private String menuPath;
     private String menuContentType;
-    private Boolean menuVisible;
+    private String menuVisible;
     private Integer menuDisplayOrder;
     private String parentMenuTitle; // 상위 메뉴 제목 추가
 

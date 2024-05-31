@@ -57,13 +57,13 @@ public class Menu extends BaseEntity {
     private List<Menu> subMenus = new ArrayList<>();
 
     @Column(nullable = false)
-    private Boolean menuVisible; //메뉴의 노출 여부
+    private String menuVisible; //메뉴의 노출 여부
 
     @Column(nullable = false)
-    private Boolean menuMobileVisible; //메뉴의 모바일 노출 여부
+    private String menuMobileVisible; //메뉴의 모바일 노출 여부
 
     @Column(nullable = false)
-    private Boolean menuActive; //메뉴의 활성화 여부
+    private String menuActive; //메뉴의 활성화 여부
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

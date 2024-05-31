@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,8 +33,10 @@ public class MenuService {
         Map<Menu, List<Menu>> menuMap = new HashMap<>();
 
         // Map을 채우면서 모든 메뉴 처리
-        for (Menu m : allMenus) {
-            menuMap.computeIfAbsent(m.getParentMenu(), k -> new ArrayList<>()).add(m);
+        if (!allMenus.isEmpty()) {
+            for (Menu oneMenu : allMenus) {
+                menuMap.computeIfAbsent(oneMenu.getParentMenu(), k -> new ArrayList<>()).add(oneMenu);
+            }
         }
 
         // 최상위 메뉴 목록 추출 및 하위 메뉴 설정
@@ -55,26 +58,60 @@ public class MenuService {
         }
     }
 
-    public MenuDTO getMenuDetails(Integer menuIdx) {
-        Menu menu = menuRepository.findById(menuIdx).orElse(null);
-        if (menu == null) {
+    public MenuDTO getMenuDetails(Menu menu) {
+        Menu getOneMenu = menuRepository.findById(menu.getMenuIdx()).orElse(null);
+        if (getOneMenu == null) {
             return null;
         }
-        return convertToDTO(menu);
+        MenuDTO menuDTO = new MenuDTO();
+        switch (menu.getEditMode()) {
+            case "ADD":
+                return saveConvertToDTO(menuDTO, getOneMenu);
+            case "MODIFY":
+                return detailsConvertToDTO(menuDTO, getOneMenu);
+            case "DELETE":
+                return detailsConvertToDTO(menuDTO, getOneMenu);
+            case "DETAIL":
+                return detailsConvertToDTO(menuDTO, getOneMenu);
+        }
+        return menuDTO;
     }
 
-    public MenuDTO convertToDTO(Menu menu) {
-        MenuDTO dto = new MenuDTO();
-        dto.setMenuIdx(menu.getMenuIdx());
-        dto.setMenuTitle(menu.getMenuTitle());
-        dto.setMenuPath(menu.getMenuPath());
-        dto.setMenuContentType(menu.getMenuContentType().name());
-        dto.setMenuVisible(menu.getMenuVisible());
-        dto.setMenuDisplayOrder(menu.getMenuDisplayOrder());
-        if (menu.getParentMenu() != null) {
-            dto.setParentMenuTitle(menu.getParentMenu().getMenuTitle());
-        }
-        return dto;
+    private MenuDTO detailsConvertToDTO(MenuDTO menuDTO, Menu menu) {
+        basicConvertDTO(menuDTO, menu);
+
+        menuDTO.setMenuPath(menu.getMenuPath());
+        menuDTO.setMenuContentType(menu.getMenuContentType().name());
+        menuDTO.setMenuVisible(menu.getMenuVisible());
+
+        menuDTO.setMenuDisplayOrder(menu.getMenuDisplayOrder());
+
+        return menuDTO;
+    }
+
+
+    private MenuDTO saveConvertToDTO(MenuDTO menuDTO, Menu menu) {
+        basicConvertDTO(menuDTO, menu);
+
+        menuDTO.setMenuPath("");
+        menuDTO.setMenuContentType("HTML");
+        menuDTO.setMenuVisible("Y");
+
+        int maxSubMenusDisplay = menu.getSubMenus().stream()
+                                     .mapToInt(Menu::getMenuDisplayOrder)
+                                     .max()
+                                     .orElse(0);
+
+        menuDTO.setMenuDisplayOrder(maxSubMenusDisplay + 1);
+
+        return menuDTO;
+    }
+
+    private void basicConvertDTO(MenuDTO menuDTO, Menu menu) {
+        menuDTO.setMenuIdx(menu.getMenuIdx());
+        menuDTO.setMenuTitle(menu.getMenuTitle());
+        Optional.ofNullable(menu.getParentMenu())
+                .ifPresent(parent -> menuDTO.setParentMenuTitle(parent.getMenuTitle()));
     }
 
 

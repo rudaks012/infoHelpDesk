@@ -12,7 +12,7 @@
   <link rel="stylesheet" th:href="@{/common/css/menu.css}">
 </head>
 <body>
-<form id="board" th:action="@{/menu/index.do}" th:object="${menu}" method="get" autocomplete="off">
+<form id="menu" th:action="@{/menus/index.do}" th:object="${menu}" method="get" autocomplete="off" onsubmit="return false;">
   <div class="container">
     <div class="menuSidebar">
       <div class="menubar">
@@ -38,6 +38,7 @@
           <form>
             <div class="form-group">
               <label for="name">상위메뉴명</label>
+              <label for="parentName"></label>
               <input type="text" id="parentName" readonly>
             </div>
             <div class="form-group">
@@ -51,18 +52,18 @@
             <div class="form-group">
               <label for="type">메뉴 타입</label>
               <select id="type">
-                <option value="html">HTML</option>
-                <option value="bulletin-board">게시판</option>
-                <option value="program-module">모듈</option>
-                <option value="external">내부링크</option>
-                <option value="internal-link">외부링크</option>
+                <option value="HTML">HTML</option>
+                <option value="BOARD">게시판</option>
+                <option value="MODULE">모듈</option>
+                <option value="INTERNALLINK">내부링크</option>
+                <option value="EXTERNALLINK">외부링크</option>
               </select>
             </div>
             <div class="form-group">
               <label for="visibility">사용여부</label>
               <select id="visibility">
-                <option value="visible">사용함</option>
-                <option value="hidden">사용안함</option>
+                <option value="Y">사용함</option>
+                <option value="N">사용안함</option>
               </select>
             </div>
             <div class="form-group">
@@ -107,41 +108,63 @@
 </html>
 
 <script>
+
   function addSubMenu(menuIdx) {
-    alert('Add sub-menu for menu IDX: ' + menuIdx);
+    fetchMenuDetails({
+      menuIdx: menuIdx,
+      editMode: 'ADD',
+    });
   }
 
   function showMenuDetails(menuIdx) {
-    console.log('Request details for menu IDX: ' + menuIdx);
-
-    // 요청할 데이터 객체 생성
-    const requestData = {
+    fetchMenuDetails({
       menuIdx: menuIdx,
-      additionalCriteria: 'someCriteria'  // 추가적인 필터 조건 예시
-    };
+      editMode: 'DETAIL',
+    });
+  }
 
+
+  function updateMenuFields(data, editMode) {
+    switch (editMode) {
+      case 'ADD':
+        document.getElementById('parentName').value = data.menuTitle || '상위메뉴없음';
+        document.getElementById('name').value = "";
+        document.getElementById('path').value = "";
+        document.getElementById('type').value = 'HTML';
+        document.getElementById('visibility').value = 'Y';
+        document.getElementById('order').value = data.menuDisplayOrder;
+        break;
+      case 'DETAIL':
+      case 'MODIFY':
+      case 'DELETE':
+        document.getElementById('parentName').value = data.parentMenuTitle || '상위메뉴없음';
+        document.getElementById('name').value = data.menuTitle;
+        document.getElementById('path').value = data.menuPath;
+        document.getElementById('type').value = data.menuContentType;
+        document.getElementById('visibility').value = data.menuVisible;
+        document.getElementById('order').value = data.menuDisplayOrder;
+        break;
+      default:
+        console.error('알 수 없는 편집 모드:' + editMode);
+        break;
+    }
+  }
+
+  function fetchMenuDetails(requestData) {
     fetch('/menus/details.do', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(requestData)
     })
     .then(response => response.json())
     .then(data => {
       if (data) {
-        document.getElementById('parentName').value = data.parentMenuTitle ? data.parentMenuTitle : '상위메뉴없음';
-        document.getElementById('name').value = data.menuTitle;
-        document.getElementById('path').value = data.menuPath;
-        document.getElementById('type').value = data.menuContentType;
-        document.getElementById('visibility').value = data.menuVisible ? 'visible' : 'hidden';
-        document.getElementById('order').value = data.menuDisplayOrder;
+        updateMenuFields(data, requestData.editMode);
       } else {
-        console.error('No menu details found.');
+        console.error('메뉴 세부정보를 찾을 수 없습니다');
       }
     })
-    .catch(error => console.error('Error loading the menu details:', error));
+    .catch(error => console.error('메뉴 세부정보를 로드하는 중에 오류가 발생했습니다.', error));
   }
-
 
 </script>
